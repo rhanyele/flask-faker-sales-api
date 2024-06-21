@@ -14,7 +14,7 @@ class TransactionModel(BaseModel):
     productName: str
     productCategory: str
     productPrice: float = Field(..., gt=50, le=5000)
-    productQuantity: int = Field(..., gt=1, le=5)
+    productQuantity: int = Field(..., gt=0, le=5)
     productDiscount: float = Field(..., gt=0, le=0.3)
     productBrand: Literal['Apple', 'Samsung', 'Xiaomi', 'Microsoft', 'Sony', 'LG', 'Dell', 'Lenovo']
     currency: Literal['BRL', 'USD', 'EUR']

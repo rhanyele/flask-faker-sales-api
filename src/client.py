@@ -13,18 +13,6 @@ def generate_fake_data():
 
     Returns:
         dict: Dicionário com dados fictícios de transação.
-              - "transactionId" (str): Identificador único para a transação.
-              - "productId" (str): Identificador do produto.
-              - "productName" (str): Nome do produto.
-              - "productCategory" (str): Categoria do produto.
-              - "productPrice" (float): Preço do produto.
-              - "productQuantity" (int): Quantidade do produto.
-              - "prodcutDiscount" (float): Desconto do produto.
-              - "productBrand" (str): Marca do produto.
-              - "currency" (str): Moeda da transação.
-              - "customerId" (str): Identificador do cliente.
-              - "transactionDate" (str): Data e hora da transação no formato ISO 8601.
-              - "paymentMethod" (str): Método de pagamento usado para a transação.
     """
     fake = Faker()
     user = fake.simple_profile()
@@ -66,14 +54,11 @@ def send_json(data):
 
     Args:
         data (dict or list): Dados a serem enviados como JSON.
-
-    Returns:
-        None
     """
     url = f"{BASE_URL}/upload_transaction"
     headers = {"Content-Type": "application/json"}
     
-    response = requests.post(url, data=json.dumps(data), headers=headers)
+    response = requests.post(url, json=data, headers=headers)
     
     if response.status_code == 200:
         print("Dados enviados com sucesso.")
@@ -83,9 +68,6 @@ def send_json(data):
 def get_valid_data():
     """
     Recupera os dados processados e válidos do servidor Flask via GET.
-
-    Returns:
-        None
     """
     url = f"{BASE_URL}/get_processed_valid_data"
     
@@ -100,9 +82,6 @@ def get_valid_data():
 def get_invalid_data():
     """
     Recupera os dados processados e inválidos do servidor Flask via GET.
-
-    Returns:
-        None
     """
     url = f"{BASE_URL}/get_processed_invalid_data"
     
@@ -116,8 +95,8 @@ def get_invalid_data():
 
 if __name__ == "__main__":
     # Gerando dados fictícios
-    data = generate_transaction_batch(100)
-    
+    data = generate_transaction_batch(50)
+
     # Enviando JSON para o servidor Flask
     send_json(data)
     
