@@ -1,4 +1,4 @@
-import redis
+import redis as rd
 
 def connect_redis(db):
     """
@@ -11,7 +11,7 @@ def connect_redis(db):
         redis.Redis: Objeto cliente Redis conectado ao banco de dados especificado.
     """
     # redis-db é o nome do container do Redis
-    return redis.Redis(host='redis-db', port=6379, db=db)
+    return rd.Redis(host='redis-db', port=6379, db=db)
 
 def truncate_redis(client):
     """
@@ -24,16 +24,15 @@ def truncate_redis(client):
 
 def insert_data(client, data):
     """
-    Insere os dados do DataFrame no Redis.
+    Insere os dados no Redis.
 
     Args:
         client (redis.Redis): Cliente Redis conectado ao banco de dados.
         data: Dados a serem inseridos.
     """
-    for row in data.to_dict('records'):
-        transaction_id = row['transactionId']
-        key = f"transaction:{transaction_id}"
-        client.hmset(key, row)
+    transaction_id = data['transactionId']
+    key = f"transaction:{transaction_id}"
+    client.hmset(key, data)
 
 def get_all_data(client):
     """

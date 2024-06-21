@@ -1,6 +1,4 @@
 import logging
-import json
-import pandas as pd
 from model.model import validate_transaction
 from database.redis_client import create_client_valid, create_client_invalid, truncate_redis, insert_data
 
@@ -18,8 +16,8 @@ def process_data(transaction_data):
     truncate_redis(client_valid)
     truncate_redis(client_invalid)
 
-    for _, row in transaction_data.iterrows():
-        transaction = row.to_dict()
+    for  row in transaction_data:
+        transaction = row
         is_valid, errors = validate_transaction(transaction)
         if is_valid:
             transaction['totalAmount'] = calculate_total_amount(transaction['productQuantity'], transaction['productPrice'])
@@ -27,15 +25,14 @@ def process_data(transaction_data):
             transaction['finalAmount'] = calculate_final_amount(transaction['totalAmount'], transaction['discountAmount'])
             logging.info(f"Dados válidos e processados: {transaction}")
             # Insere a transação válidas e processadas no Redis
-            insert_data(client_valid, pd.DataFrame([transaction]))
+            insert_data(client_valid, transaction)
         else:
-            logging.warning(f"Dados inválidos: {transaction}")
-            logging.error(f"Erro na criação da transação: {errors}")
             # Formata o erro recebido do Pydantic para um formato chave/valor
             for i, error in enumerate(errors, start=1):
                 transaction[f'error {i}'] = f"{error.get('type')} occurred in the {error.get('loc')[0]} field. {error.get('msg')} but got {error.get('input')}."
+            logging.warning(f"Dados inválidos: {transaction}")
             # Insere a transação inválida no Redis
-            insert_data(client_invalid, pd.DataFrame([transaction]))
+            insert_data(client_invalid, transaction)
 
 def calculate_total_amount(quantity, price):
     """

@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-import pandas as pd
 import logging
 from processing import process_data
 from database.redis_client import create_client_valid, create_client_invalid, get_all_data
@@ -23,8 +22,7 @@ def upload_json():
         json_data = request.json
         if json_data:
             logging.info(f"Requisição recebida: {json_data}")
-            df = pd.DataFrame(json_data)
-            process_data(df)
+            process_data(json_data)
             return jsonify({"message": "Dados recebidos com sucesso."}), 200
         else:
             return jsonify({"error": "Nenhum dado recebido."}), 400

@@ -1,6 +1,5 @@
 import requests
 import random
-import json
 from datetime import datetime
 from faker import Faker
 
