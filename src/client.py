@@ -26,7 +26,7 @@ def generate_fake_data():
         "productBrand": random.choice(['Apple', 'Samsung', 'Xiaomi', 'Microsoft', 'Sony', 'LG', 'Dell', 'Lenovo', 'Positivo']),
         "currency": random.choice(['BRL', 'USD', 'EUR', 'JPY']),
         "customerId": user['username'],
-        "transactionDate": datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f%z'),
+        "transactionDate": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         "paymentMethod": random.choice(['cartão de crédito', 'cartão de débito', 'PIX', 'dinheiro', 'boleto'])
     }
     return record
@@ -50,19 +50,20 @@ def generate_transaction_batch(batch_size):
 def send_json(data):
     """
     Envia dados JSON para o servidor Flask via POST.
-
-    Args:
-        data (dict or list): Dados a serem enviados como JSON.
     """
     url = f"{BASE_URL}/upload_transaction"
     headers = {"Content-Type": "application/json"}
     
-    response = requests.post(url, json=data, headers=headers)
-    
-    if response.status_code == 200:
-        print("Dados enviados com sucesso.")
+    try:
+        response = requests.post(url, json=data, headers=headers)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao enviar dados: {e}")
     else:
-        print(f"Erro ao enviar dados: {response.json()}")
+        if response.status_code == 200:
+            print("Dados enviados com sucesso.")
+        else:
+            print(f"Erro ao enviar dados: {response.json()}")
 
 def get_valid_data():
     """
@@ -94,13 +95,14 @@ def get_invalid_data():
 
 if __name__ == "__main__":
     # Gerando dados fictícios
-    data = generate_transaction_batch(50)
+    data = generate_transaction_batch(2)
+    print(data)
 
     # Enviando JSON para o servidor Flask
     send_json(data)
     
     # Obtendo dados processados e válidos do servidor Flask
-    get_valid_data()
+    #get_valid_data()
 
     # Obtendo dados processados e inválidos do servidor Flask
-    get_invalid_data()
+   # get_invalid_data()
