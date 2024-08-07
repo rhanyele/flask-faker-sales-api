@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   flask-app:
     build:
@@ -11,14 +10,12 @@ services:
       - redis-db
     networks:
       - app-network
-
   redis-db:
     image: redis:latest
     ports:
       - "6379:6379"
     networks:
       - app-network
-
 networks:
   app-network:
     driver: bridge

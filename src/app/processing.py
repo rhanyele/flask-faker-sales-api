@@ -1,5 +1,5 @@
 import logging
-from model.model import validate_transaction
+from model.model import validate_process
 from database.redis_client import create_client_valid, create_client_invalid, truncate_redis, insert_data
 
 def process_data(transaction_data):
@@ -16,9 +16,9 @@ def process_data(transaction_data):
     truncate_redis(client_valid)
     truncate_redis(client_invalid)
 
-    for  row in transaction_data:
+    for row in transaction_data:
         transaction = row
-        is_valid, errors = validate_transaction(transaction)
+        is_valid, errors = validate_process(transaction)
         if is_valid:
             transaction['totalAmount'] = calculate_total_amount(transaction['productQuantity'], transaction['productPrice'])
             transaction['discountAmount'] = calculate_discount(transaction['totalAmount'], transaction['productDiscount'])

@@ -95,8 +95,7 @@ def get_invalid_data():
 
 if __name__ == "__main__":
     # Gerando dados fictícios
-    data = generate_transaction_batch(2)
-    print(data)
+    data = generate_transaction_batch(50)
 
     # Enviando JSON para o servidor Flask
     send_json(data)
