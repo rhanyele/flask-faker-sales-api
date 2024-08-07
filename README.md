@@ -72,6 +72,7 @@ Este projeto consiste em um sistema simples de processamento de transações usa
 - Com isso, você pode acessar os endpoints GET para visualizar os dados em formato JSON ou receber a requisição diretamente no arquivo ```client.py```.
 
 ## Endpoints
+- **/apidocs:** Documentação da API com Swagger.
 - **/upload_transaction:** Recebe transações em formato JSON, valida cada uma e as armazena como válidas ou inválidas.
 - **/get_processed_valid_data:** Retorna as transações válidas armazenadas.
 - **/get_processed_invalid_data:** Retorna as transações inválidas armazenadas.
