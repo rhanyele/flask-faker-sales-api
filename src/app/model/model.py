@@ -5,9 +5,27 @@ from datetime import datetime
 
 
 # Definição do modelo
-class TransactionModel(BaseModel):
+class Transaction(BaseModel):
     """
-    Modelo para validação de dados de transações.
+    Modelo para os tipo de dados, contrato com os dados que estão sendo enviados pelo upload_json.
+    """
+    transactionId: UUID
+    productId: str
+    productName: str
+    productCategory: str
+    productPrice: float
+    productQuantity: int
+    productDiscount: float
+    productBrand: str
+    currency: str
+    customerId: str
+    transactionDate: datetime
+    paymentMethod: str
+
+# Definição do modelo
+class TransactionProcess(Transaction):
+    """
+    Modelo para validação as regras de transação.
     """
     transactionId: UUID
     productId: str
@@ -41,7 +59,6 @@ def validate(data, model):
     except ValidationError as e:
         return False, e.errors()
 
-
 def validate_transaction(data):
     """
     Valida os dados fornecidos com base no modelo TransactionModel.
@@ -52,4 +69,16 @@ def validate_transaction(data):
     Returns:
         tuple: (bool, list) True se os dados forem válidos, False e lista de erros caso contrário.
     """
-    return validate(data, TransactionModel)
+    return validate(data, Transaction)
+
+def validate_process(data):
+    """
+    Valida os dados fornecidos com base no modelo TransactionModel.
+
+    Args:
+        data (dict): Os dados a serem validados.
+
+    Returns:
+        tuple: (bool, list) True se os dados forem válidos, False e lista de erros caso contrário.
+    """
+    return validate(data, TransactionProcess)
